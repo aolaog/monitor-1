@@ -1,0 +1,31 @@
+# options
+options {
+          log_fifo_size (1000);
+          create_dirs (yes);
+        };
+
+source s_local {
+        internal();
+        unix-stream("/dev/log");
+        file("/proc/kmsg" log_prefix("kernel: "));
+};
+
+
+filter f_messages {
+        level(info,notice,warn) and facility(auth,authpriv,cron,daemon,syslog);
+};
+
+destination d_local {
+        file ("/var/log/syslog-ng/$YEAR.$MONTH.$DAY/$HOST/$FACILITY.log");
+};
+
+destination d_remote {
+        tcp(syslog-ng-server);
+        udp(syslog-ng-server);
+};
+
+log {
+        source(s_local);
+        filter(f_messages);
+        destination(d_remote);
+};

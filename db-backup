@@ -1,0 +1,2 @@
+59 23 * * * root /bin/sh /home/zoomi/zoomi-db-backup.sh
+
